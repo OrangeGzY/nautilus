@@ -30,4 +30,7 @@ const NautilusFileSortType    get_sorts_type_from_metadata_text (const char   *m
 void                          setup_cell_common                 (GtkListItem      *listitem,
                                                                  NautilusViewCell *cell);
 
+#define listitem_get_view_item(li) \
+(NAUTILUS_VIEW_ITEM (gtk_tree_list_row_get_item (GTK_TREE_LIST_ROW (gtk_list_item_get_item (li)))))
+
 G_END_DECLS

@@ -1,5 +1,6 @@
 #include "nautilus-view-model.h"
 #include "nautilus-view-item.h"
+#include "nautilus-directory.h"
 #include "nautilus-global-preferences.h"
 
 struct _NautilusViewModel
@@ -257,6 +258,16 @@ create_model_func (GObject           *item,
     if (!nautilus_file_is_directory (file))
     {
         return NULL;
+    }
+    else /* Check whether we already know it to be empty. */
+    {
+        g_autoptr (NautilusDirectory) directory = NULL;
+        directory = nautilus_directory_get_for_file (file);
+        if (nautilus_directory_are_all_files_seen (directory) &&
+            !nautilus_directory_is_not_empty (directory))
+        {
+            return NULL;
+        }
     }
 
     store = g_hash_table_lookup (self->directory_reverse_map, file);

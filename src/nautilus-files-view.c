@@ -3319,6 +3319,7 @@ nautilus_files_view_finalize (GObject *object)
     g_clear_object (&priv->view_action_group);
     g_clear_object (&priv->background_menu_model);
     g_clear_object (&priv->selection_menu_model);
+    g_clear_object (&priv->toolbar_menu_sections->icon_size_section);
     g_clear_object (&priv->toolbar_menu_sections->sort_section);
     g_clear_object (&priv->extensions_background_menu);
     g_clear_object (&priv->templates_menu);
@@ -8061,11 +8062,17 @@ nautilus_files_view_reset_view_menu (NautilusFilesView *view)
 {
     NautilusFilesViewPrivate *priv = nautilus_files_view_get_instance_private (view);
     NautilusFile *file;
+    GMenuModel *icon_size_section = priv->toolbar_menu_sections->icon_size_section;
     GMenuModel *sort_section = priv->toolbar_menu_sections->sort_section;
     const gchar *action;
     gint i;
 
     file = nautilus_files_view_get_directory_as_file (NAUTILUS_FILES_VIEW (view));
+
+    /* Extra large icons option is available for grid view only. */
+    action = NAUTILUS_IS_GRID_VIEW (view) ? "view.zoom-to-level" : "doesnt-exist";
+    i = nautilus_g_menu_model_find_by_string (icon_size_section, "nautilus-menu-item", "extra-large");
+    nautilus_g_menu_replace_string_in_item (G_MENU (icon_size_section), i, "action", action);
 
     /* When not in the special location, set an inexistant action to hide the
      * menu item. This works under the assumptiont that the menu item has its
@@ -9425,6 +9432,7 @@ nautilus_files_view_init (NautilusFilesView *view)
     /* Toolbar menu */
     builder = gtk_builder_new_from_resource ("/org/gnome/nautilus/ui/nautilus-toolbar-view-menu.ui");
     priv->toolbar_menu_sections = g_new0 (NautilusToolbarMenuSections, 1);
+    priv->toolbar_menu_sections->icon_size_section = G_MENU_MODEL (g_object_ref (gtk_builder_get_object (builder, "icon_size_section")));
     priv->toolbar_menu_sections->sort_section = G_MENU_MODEL (g_object_ref (gtk_builder_get_object (builder, "sort_section")));
 
     g_signal_connect (view,

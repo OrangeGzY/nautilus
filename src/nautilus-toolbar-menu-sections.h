@@ -25,6 +25,7 @@ typedef struct _NautilusToolbarMenuSections NautilusToolbarMenuSections;
 
 struct _NautilusToolbarMenuSections {
         GMenuModel *sort_section;
+        GMenuModel *icon_size_section;
 };
 
 G_END_DECLS

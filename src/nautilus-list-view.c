@@ -735,7 +735,7 @@ const GActionEntry list_view_entries[] =
 {
     { "visible-columns", action_visible_columns },
     { "sort", NULL, "(sb)", "('invalid',false)", action_sort_order_changed },
-    { "zoom-to-level", NULL, NULL, "1", action_zoom_to_level }
+    { "zoom-to-level", NULL, "i", "1", action_zoom_to_level }
 };
 
 static void
